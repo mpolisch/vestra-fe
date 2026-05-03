@@ -30,8 +30,8 @@ export const config = {
          * - _next/static (static files)
          * - _next/image (image optimization)
          * - favicon.ico, sitemap.xml, robots.txt
-         * - public folder files
+         * - public folder files (paths containing a file extension)
          */
-        '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+        '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
     ],
 };
