@@ -16,7 +16,12 @@ export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const registered = searchParams.get('registered');
-    const redirect = searchParams.get('redirect') || '/dashboard';
+    const rawRedirect = searchParams.get('redirect');
+    // Guard against open redirect: only allow relative paths
+    const redirect =
+        rawRedirect && rawRedirect.startsWith('/') && !rawRedirect.startsWith('//')
+            ? rawRedirect
+            : '/dashboard';
 
     const {
         register,

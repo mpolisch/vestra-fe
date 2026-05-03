@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('Missing required env var: NEXT_PUBLIC_API_URL');
+}
+
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     withCredentials: true, // Required for httpOnly cookies
 });
 
