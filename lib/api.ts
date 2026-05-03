@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BackendError } from '@/types/api';
 
 if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('Missing required env var: NEXT_PUBLIC_API_URL');
@@ -15,7 +16,7 @@ export const api = axios.create({
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (axios.isAxiosError(error) && error.response?.data?.message) {
+        if (axios.isAxiosError<BackendError>(error) && error.response?.data?.message) {
             error.message = error.response.data.message;
         }
         return Promise.reject(error);
