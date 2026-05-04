@@ -4,10 +4,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import { api } from '@/lib/api';
 import { loginSchema, type LoginDTO } from '@/lib/schemas';
-import type { BackendError } from '@/types/api';
+import { getErrorMessage } from '@/lib/errors';
 
 const inputClassName =
     'w-full px-3 py-2 rounded-md border border-border bg-background text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent';
@@ -36,13 +35,10 @@ export function LoginForm() {
         try {
             await api.post('/auth/login', data);
             router.push(redirect);
-        } catch (err) {
-            if (axios.isAxiosError<BackendError>(err)) {
-                const message = err.response?.data?.message || 'A network error occurred';
-                setError('root', { message });
-            } else {
-                setError('root', { message: 'An unexpected error occurred' });
-            }
+        } catch (err: unknown) {
+            setError('root', {
+                message: getErrorMessage(err),
+            });
         }
     };
 
