@@ -21,6 +21,7 @@ export function OnboardingForm() {
         resolver: zodResolver(createPlanSchema),
         defaultValues: {
             contribution_priority: 'tfsa_first',
+            risk_tolerance: 'conservative',
             tfsa_balance: 0,
             rrsp_balance: 0,
             fhsa_balance: 0,
