@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { NavBar } from '@/components/layout/NavBar';
 import { api } from '@/lib/api';
+import type { Plan } from '@/types';
+import { ApiSuccess } from '@/types/api';
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
     const { user, status } = useAuth();
@@ -28,7 +30,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
         // Check plans once per session — pathname read via ref so this effect
         // doesn't re-run (and re-fetch) on every in-app navigation.
-        api.get('/plans').then((res) => {
+        api.get<ApiSuccess<Plan[]>>('/plans').then((res) => {
             const plans = res.data.data;
             const currentPath = pathnameRef.current;
             if (plans.length === 0 && currentPath !== '/onboarding') {
