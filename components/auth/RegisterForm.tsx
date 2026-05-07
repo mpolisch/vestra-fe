@@ -7,9 +7,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { registerSchema, type RegisterDTO } from '@/lib/schemas';
 import { getErrorMessage } from '@/lib/errors';
-
-const inputClassName =
-    'w-full px-3 py-2 rounded-md border border-border bg-background text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent';
+import { inputClassName } from '@/lib/styles';
 
 export function RegisterForm() {
     const router = useRouter();
