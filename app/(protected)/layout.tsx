@@ -25,8 +25,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         if (status !== 'authenticated') return;
 
         // After a redirect, pathname changes and this effect re-runs.
-        // hasFetchedRef prevents a second API call — we already know the user
-        // has a plan, so if they manually navigate back to /onboarding, redirect them.
+        // hasFetchedRef prevents a second API call
         if (hasFetchedRef.current) {
             if (pathname === '/onboarding') {
                 router.replace('/dashboard');
@@ -42,10 +41,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 const plans = res.data.data;
                 if (plans.length === 0 && pathname !== '/onboarding') {
                     router.replace('/onboarding');
-                    // Don't set routeReady — keep the loader until the redirect lands
+                    // Don't set routeReady keep the loader until the redirect lands
                 } else if (plans.length > 0 && pathname === '/onboarding') {
                     router.replace('/dashboard');
-                    // Don't set routeReady — keep the loader until the redirect lands
+                    // Don't set routeReady keep the loader until the redirect lands
                 } else {
                     setRouteReady(true);
                 }
