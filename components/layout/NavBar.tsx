@@ -11,14 +11,14 @@ export function NavBar() {
             <div className="mx-auto px-10 h-12 flex items-center justify-between">
                 <Link
                     href="/dashboard"
-                    className="font-mono text-sm font-bold text-text-primary hover: text-text-secondary transition-colors"
+                    className="font-mono text-sm font-bold text-text-primary hover:text-text-secondary transition-colors"
                 >
                     Vestra
                 </Link>
 
                 <button
                     onClick={logout}
-                    className="text-xs text-text-secondary hover: text-text-primary transition-colors"
+                    className="text-xs text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                 >
                     Sign out
                 </button>

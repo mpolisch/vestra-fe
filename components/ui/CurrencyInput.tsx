@@ -1,9 +1,10 @@
+import { type UseFormRegisterReturn } from 'react-hook-form';
 import { inputClassName } from '@/lib/styles';
 
 interface CurrencyInputProps {
     id: string;
     placeholder?: string;
-    registration: object; // from react-hook-form's register()
+    registration: UseFormRegisterReturn;
 }
 
 export function CurrencyInput({ id, placeholder, registration }: CurrencyInputProps) {
