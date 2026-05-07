@@ -31,10 +31,11 @@ export type LoginDTO = z.infer<typeof loginSchema>;
 
 // Base Plan Schema, shares properties between Create and Update
 export const planBaseSchema = z.object({
-    name: z.preprocess(
-        (val) => (val === '' || val === null || val === undefined ? undefined : val),
-        z.string().trim().max(100, 'Plan name is too long').optional(),
-    ),
+    name: z.preprocess((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = String(val).trim();
+        return trimmed === '' ? undefined : trimmed;
+    }, z.string().max(100, 'Plan name is too long').optional()),
     current_age: z.coerce
         .number()
         .int('Age must be a whole number')
@@ -48,9 +49,7 @@ export const planBaseSchema = z.object({
     annual_income: z.coerce.number().positive('Annual income must be positive'),
     current_savings: z.coerce.number().min(0, 'Current savings cannot be negative'),
     monthly_contributions: z.coerce.number().positive('Monthly contributions must be positive'),
-    risk_tolerance: z.enum(['conservative', 'moderate', 'aggressive'], {
-        error: 'Invalid risk tolerance',
-    }),
+    risk_tolerance: z.enum(['conservative', 'moderate', 'aggressive']),
     retirement_goal: z.preprocess(
         (val) => (val === '' || val === null || val === undefined ? undefined : val),
         z.coerce.number().positive('Retirement goal must be positive').optional(),
@@ -58,11 +57,7 @@ export const planBaseSchema = z.object({
     tfsa_balance: z.coerce.number().min(0, 'TFSA balance cannot be negative'),
     rrsp_balance: z.coerce.number().min(0, 'RRSP balance cannot be negative'),
     fhsa_balance: z.coerce.number().min(0, 'FHSA balance cannot be negative'),
-    contribution_priority: z
-        .enum(['tfsa_first', 'balanced', 'rrsp_heavy'], {
-            error: 'Invalid contribution priority',
-        })
-        .default('tfsa_first'),
+    contribution_priority: z.enum(['tfsa_first', 'balanced', 'rrsp_heavy']).default('tfsa_first'),
 });
 
 // Create Plan Schema
