@@ -11,7 +11,7 @@ interface PlanListProps {
 
 export function PlanList({ plans, onEdit, onDeleted }: PlanListProps) {
     return (
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">  
+        <div className="grid gap-4 items-stretch [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
             {plans.map((plan) => (
                 <PlanCard key={plan.id} plan={plan} onEdit={onEdit} onDeleted={onDeleted} />
             ))}
