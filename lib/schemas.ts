@@ -31,7 +31,10 @@ export type LoginDTO = z.infer<typeof loginSchema>;
 
 // Base Plan Schema, shares properties between Create and Update
 export const planBaseSchema = z.object({
-    name: z.string().trim().max(100, 'Plan name is too long').optional(),
+    name: z.preprocess(
+        (val) => (val === '' || val === null || val === undefined ? undefined : val),
+        z.string().trim().max(100, 'Plan name is too long').optional(),
+    ),
     current_age: z.coerce
         .number()
         .int('Age must be a whole number')
@@ -48,7 +51,10 @@ export const planBaseSchema = z.object({
     risk_tolerance: z.enum(['conservative', 'moderate', 'aggressive'], {
         error: 'Invalid risk tolerance',
     }),
-    retirement_goal: z.coerce.number().positive('Retirement goal must be positive').optional(),
+    retirement_goal: z.preprocess(
+        (val) => (val === '' || val === null || val === undefined ? undefined : val),
+        z.coerce.number().positive('Retirement goal must be positive').optional(),
+    ),
     tfsa_balance: z.coerce.number().min(0, 'TFSA balance cannot be negative'),
     rrsp_balance: z.coerce.number().min(0, 'RRSP balance cannot be negative'),
     fhsa_balance: z.coerce.number().min(0, 'FHSA balance cannot be negative'),
@@ -91,4 +97,5 @@ export const createPlanSchema = planBaseSchema.superRefine((data, ctx) => {
 export const updatePlanSchema = planBaseSchema.partial();
 
 export type CreatePlanDTO = z.infer<typeof createPlanSchema>;
+export type CreatePlanInput = z.input<typeof planBaseSchema>;
 export type UpdatePlanDTO = z.infer<typeof updatePlanSchema>;
