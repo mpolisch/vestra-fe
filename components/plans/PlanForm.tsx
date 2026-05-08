@@ -30,8 +30,7 @@ export function PlanForm({ plan, onSuccess, onCancel }: PlanFormProps) {
         formState: { errors, isSubmitting },
         setError,
     } = useForm<CreatePlanInput, unknown, CreatePlanDTO>({
-        // updatePlanSchema is .partial() — its resolver output type has all fields optional,
-        // which genuinely mismatches CreatePlanDTO. The form is always fully pre-filled in
+        // updatePlanSchema is .partial(), The form is always fully pre-filled in
         // edit mode so validation is equivalent at runtime; cast is safe.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         resolver: zodResolver(isEdit ? updatePlanSchema : createPlanSchema) as any,
