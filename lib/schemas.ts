@@ -50,10 +50,14 @@ export const planBaseSchema = z.object({
     current_savings: z.coerce.number().min(0, 'Current savings cannot be negative'),
     monthly_contributions: z.coerce.number().positive('Monthly contributions must be positive'),
     risk_tolerance: z.enum(['conservative', 'moderate', 'aggressive']),
-    retirement_goal: z.preprocess(
-        (val) => (val === '' || val === null || val === undefined ? undefined : val),
-        z.coerce.number().positive('Retirement goal must be positive').optional(),
-    ),
+    retirement_goal: z.preprocess((val) => {
+        if (val === undefined) return undefined;
+        if (val === null || val === '') return null;
+        const n = Number(val);
+        // Treat NaN or 0 as explicitly clearing the goal
+        if (isNaN(n) || n === 0) return null;
+        return n;
+    }, z.number().positive('Retirement goal must be positive').nullable().optional()),
     tfsa_balance: z.coerce.number().min(0, 'TFSA balance cannot be negative'),
     rrsp_balance: z.coerce.number().min(0, 'RRSP balance cannot be negative'),
     fhsa_balance: z.coerce.number().min(0, 'FHSA balance cannot be negative'),
