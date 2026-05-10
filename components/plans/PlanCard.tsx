@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
+import { formatCurrency } from '@/lib/utils';
 import type { Plan } from '@/types';
 import { DeletePlanModal } from './DeletePlanModal';
 
@@ -73,7 +74,7 @@ export function PlanCard({ plan, onEdit, onDeleted }: PlanCardProps) {
                     <div className="flex flex-col gap-0.5">
                         <span className="text-xs text-text-muted">Monthly Contributions</span>
                         <span className="text-sm font-medium text-text-primary">
-                            ${parseFloat(plan.monthly_contributions).toLocaleString()}
+                            {formatCurrency(parseFloat(plan.monthly_contributions))}
                         </span>
                     </div>
                 </div>
