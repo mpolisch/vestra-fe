@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { loginSchema, type LoginDTO } from '@/lib/schemas';
 import { getErrorMessage } from '@/lib/errors';
+import { useAuth } from '@/context/AuthContext';
 import { inputClassName } from '@/lib/styles';
 
 export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { refreshUser } = useAuth();
     const registered = searchParams.get('registered');
     const rawRedirect = searchParams.get('redirect');
     // Guard against open redirect: only allow relative paths
@@ -32,6 +34,7 @@ export function LoginForm() {
     const onSubmit = async (data: LoginDTO) => {
         try {
             await api.post('/auth/login', data);
+            await refreshUser();
             router.push(redirect);
         } catch (err: unknown) {
             setError('root', {
