@@ -79,7 +79,7 @@ export function PlanCard({ plan, onEdit, onDeleted }: PlanCardProps) {
                 </div>
                 <div className="mt-auto">
                     <button
-                        onClick={() => router.push(`/dashboard/plans/${plan.id}`)}
+                        onClick={() => router.push(`/plans/${plan.id}`)}
                         className="cursor-pointer w-full py-2 text-sm rounded-md bg-accent text-white hover:bg-accent-hover transition-colors"
                     >
                         View Projection
