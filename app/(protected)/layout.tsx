@@ -12,11 +12,11 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     const { user, status } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-    const [ready, setReady] = useState(false);
+    const [readyForPath, setReadyForPath] = useState<string | null>(null);
+
+    const ready = readyForPath === pathname;
 
     useEffect(() => {
-        setReady(false);
-
         if (status === 'unauthenticated') {
             router.push('/login');
             return;
@@ -35,7 +35,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 } else if (plans.length > 0 && pathname === '/onboarding') {
                     router.replace('/dashboard');
                 } else {
-                    setReady(true);
+                    setReadyForPath(pathname);
                 }
             })
             .catch(() => {
