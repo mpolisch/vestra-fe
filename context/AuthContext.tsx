@@ -12,6 +12,7 @@ interface AuthContextValue {
     user: AuthUser | null;
     status: AuthStatus;
     logout: () => Promise<void>;
+    refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -33,6 +34,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
     }, []);
 
+    const refreshUser = useCallback(async () => {
+        setStatus('loading');
+        try {
+            const res = await api.get<ApiSuccess<AuthUser>>('/auth/me');
+            setUser(res.data.data);
+            setStatus('authenticated');
+        } catch {
+            setUser(null);
+            setStatus('unauthenticated');
+        }
+    }, []);
+
     const logout = useCallback(async () => {
         try {
             await api.post('/auth/logout');
@@ -44,7 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, [router]);
 
-    return <AuthContext.Provider value={{ user, status, logout }}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ user, status, logout, refreshUser }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export function useAuth(): AuthContextValue {
