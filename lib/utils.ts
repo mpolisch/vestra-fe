@@ -4,5 +4,4 @@ const cadCurrencyFormatter = new Intl.NumberFormat('en-CA', {
     maximumFractionDigits: 0,
 });
 
-export const formatCurrency = (val: number) =>
-    cadCurrencyFormatter.format(val);
+export const formatCurrency = (val: number) => cadCurrencyFormatter.format(val);
