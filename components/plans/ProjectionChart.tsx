@@ -58,7 +58,10 @@ export function ProjectionChart({
     retirementAge,
     retirementGoal,
 }: ProjectionChartProps) {
-    const maxDataValue = Math.max(...dataPoints.map((d) => d.total_balance));
+    const maxDataValue = dataPoints.reduce(
+        (max, dataPoint) => Math.max(max, dataPoint.total_balance),
+        0
+    );
     const yMax =
         retirementGoal != null && retirementGoal > maxDataValue ? retirementGoal * 1.05 : 'auto';
 
