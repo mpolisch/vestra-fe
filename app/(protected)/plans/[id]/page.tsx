@@ -89,6 +89,7 @@ export default function PlanPage() {
             <ProjectionChart
                 dataPoints={projection.data_points}
                 retirementAge={plan.retirement_age}
+                retirementGoal={plan.retirement_goal ? parseFloat(plan.retirement_goal) : null}
             />
         </div>
     );
