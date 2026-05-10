@@ -12,7 +12,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     const { user, status } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-    const [readyForPath, setReadyForPath] = useState<string | null>(null);
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -20,27 +20,35 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             return;
         }
 
-        if (status !== 'authenticated') return;
-
+        if (status !== 'authenticated') {
+            return;
+        }
+        let cancelled = false;
         api.get<ApiSuccess<Plan[]>>('/plans')
             .then((res) => {
+                if (cancelled) return;
                 const plans = res.data.data;
                 if (plans.length === 0 && pathname !== '/onboarding') {
                     router.replace('/onboarding');
                 } else if (plans.length > 0 && pathname === '/onboarding') {
                     router.replace('/dashboard');
                 } else {
-                    setReadyForPath(pathname);
+                    setReady(true);
                 }
             })
-            .catch(() => router.push('/login'));
-    }, [status, pathname, router]);
+            .catch(() => {
+                if (!cancelled) router.push('/login');
+            });
 
-    // readyForPath tracks which path was last verified: if pathname has changed
-    // since the last check, we show the loader until the new check completes.
-    const ready = readyForPath === pathname;
+        return () => {
+            cancelled = true;
+        };
+        // router is intentionally excluded: its reference changes during Next.js
+        // router initialization, which would fire navigations before the router is ready.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status, pathname]);
 
-    if (status === 'loading' || !ready) {
+    if (status !== 'authenticated' || !ready) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <p className="font-mono text-sm text-text-muted">Loading...</p>

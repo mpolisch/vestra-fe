@@ -46,11 +46,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
+    // Re-validate on bfcache restore. When the browser restores from back/forward
+    // cache, any in-flight requests are frozen and never resolve, which can leave
+    // the layout stuck in a loading state. Re-fetching auth flips `status` back
+    // to 'loading' and then 'authenticated', which retriggers the layout's effect
+    // (status is in its deps) and cleanly re-fetches plans.
+    useEffect(() => {
+        const onPageShow = (e: PageTransitionEvent) => {
+            if (e.persisted) {
+                refreshUser();
+            }
+        };
+        window.addEventListener('pageshow', onPageShow);
+        return () => window.removeEventListener('pageshow', onPageShow);
+    }, [refreshUser]);
+
     const logout = useCallback(async () => {
         try {
             await api.post('/auth/logout');
         } finally {
-            // Always clear local state and redirect, even if the server call fails
             setUser(null);
             setStatus('unauthenticated');
             router.push('/login');
