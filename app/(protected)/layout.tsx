@@ -15,6 +15,8 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
+        setReady(false);
+
         if (status === 'unauthenticated') {
             router.push('/login');
             return;
