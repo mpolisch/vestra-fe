@@ -60,9 +60,7 @@ export function ProjectionChart({
 }: ProjectionChartProps) {
     const maxDataValue = Math.max(...dataPoints.map((d) => d.total_balance));
     const yMax =
-        retirementGoal != null && retirementGoal > maxDataValue
-            ? retirementGoal * 1.05
-            : 'auto';
+        retirementGoal != null && retirementGoal > maxDataValue ? retirementGoal * 1.05 : 'auto';
 
     return (
         <div className="p-4 bg-surface rounded-lg border overflow-hidden">
