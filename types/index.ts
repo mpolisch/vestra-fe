@@ -45,3 +45,11 @@ export interface ProjectionResponse {
     data_points: ProjectionDataPoint[];
     summary: ProjectionSummary;
 }
+
+export interface ChatMessage {
+    id: string;
+    plan_id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    created_at: string;
+}
