@@ -8,6 +8,7 @@ import type { Plan, ProjectionResponse } from '@/types';
 import type { ApiSuccess } from '@/types/api';
 import { ProjectionChart } from '@/components/plans/ProjectionChart';
 import { ProjectionSummary } from '@/components/plans/ProjectionSummary';
+import { ChatPanel } from '@/components/plans/ChatPanel';
 
 export default function PlanPage() {
     const { id } = useParams<{ id: string }>();
@@ -91,6 +92,7 @@ export default function PlanPage() {
                 retirementAge={plan.retirement_age}
                 retirementGoal={plan.retirement_goal ? parseFloat(plan.retirement_goal) : null}
             />
+            <ChatPanel planId={plan.id} />
         </div>
     );
 }
