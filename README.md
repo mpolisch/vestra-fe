@@ -2,6 +2,10 @@
 
 Vestra is an AI-powered retirement planning tool for Canadians. Input your financial details, visualize your retirement projection, and chat with an AI assistant that understands your actual plan.
 
+Live App: https://vestra-chi.vercel.app
+Live Backend API: https://vestra-be-production.up.railway.app
+Backend Repo: [vestra-be](https://github.com/mpolisch/vestra-be)
+
 --- 
 
 ## The Problem
@@ -30,6 +34,8 @@ Most Canadians don't know if they're saving enough for retirement or how to allo
 
 ![Architecture diagram showing a user/browser communicating over HTTPS with a Next.js frontend hosted on Vercel, which communicates via HTTPS/REST with an Express API hosted on Railway. The Express API connects to a PostgreSQL database within the same Railway environment via TCP, and to the Claude API (Anthropic) externally via HTTPS using the Anthropic SDK.](public/Vestra%20Architecture.jpg)
 
+API requests are proxied through Vercel rewrites (`/api/*` -> Railway) to avoid cross-domain cookie issues with httpOnly JWT cookies.
+
 ---
 
 ## Tech Stack
@@ -38,16 +44,12 @@ Most Canadians don't know if they're saving enough for retirement or how to allo
 | --------- | --------------------------------- |
 | Framework | Next.js 16 (App Router)           |
 | Language  | TypeScript                        |
-| Styling   | Tailwind CSS                      |
-| Charts    | TBD                               |
+| Styling   | Tailwind CSS v4                   |
+| Forms     | React Hook Form + Zod             |
+| Charts    | Recharts                          |
+| Markdown  | react-markdown + @tailwindcss/typography |
 | Auth      | httpOnly JWT cookies (via BE)     |
 | Hosting   | Vercel                            |
-
----
-
-## Related Repo
-
-Backend API: [vestra-be](https://github.com/mpolisch/vestra-be)
 
 --- 
 
@@ -57,7 +59,7 @@ Backend API: [vestra-be](https://github.com/mpolisch/vestra-be)
 
 - Node.js 20+
 - npm
-- The backend API running locally
+- vestra-be running locally
 
 ### Installation
 
@@ -71,7 +73,7 @@ npm install
 
 Copy `.env.example` to `.env.local` and fill in the values
 
-### Running Locally
+### Running on Development Server
 
 ```bash
 npm run dev
@@ -98,22 +100,50 @@ npm run start
 | `npm run lint` | Run ESLint |
 | `npm run format` | Format all files with Prettier |
 | `npm run format:check` | Check formatting without writing |
+| `npm run typecheck` | TypeScript type check without emitting |
 
 --- 
 
+## Design Decisions
+
+- Vercel rewrite proxy: all API calls route through `/api/*` on the Vercel domain proxied to Railway
+- Projection logic is performed on the backend so the frontend never performs financial calculations
+- httpOnly cookies: JWT never touches JavaScript
+- Optimistic UI: plan create / update / delete updates local state immediately without fetching. Same with user messages for AI chat
+- AI Chat context: all messages contain a freshly fetched system prompt with theuser's current plan data and projection summary so Claude always has live numbers
+
+---
+
 ## Security
 
-- Authentication handled via httpOnly, Secure, SameSite=Strict cookies
-- All API requests include `credentials: 'include'` for cookie forwarding
+- Authentication handled via httpOnly, Secure, SameSite=none cookies
+- All API requests proxied through vercel so there are no direct cross-origin requests from the browser
 - No sensitive data stored in localStorage or sessionStorage
+- Security headers configured in next.config.ts
+- robots.txt disallows all crawlers
+- Error messages gated in production
 
 ---
 
 ## Future Enhancements
 
-- Email verification on registration
-- Password reset flow
-- Multi-scenario plan comparison view
-- PDF export of retirement projection
-- Mobile-responsive polish
+- AI streaming responses: SSE-based streaming for real-time chat feel instead of waiting for full response
+- AI tool use: allow Claude to call projection recalculation and plan update functions mid-conversation
+- Streaming "what if" scenarios: adjust plan values in chat and see projection update in real-time
+- CRA contribution limits UI: show remaining TFSA/RRSP/FHSA room based on user's age and history
+- Post-retirement drawdown modeling: visualize portfolio longevity based on spending rate
+- PDF export: downloadable retirement plan summary
+- Mobile-responsive polish: current UI is desktop-first
+- PlanFields shared component: consolidate OnboardingForm and PlanForm which share identical field structure
+- React Testing Library + Vitest: component tests for forms and projection display
+- Email verification: verify email on registration
+- Password reset flow: forgot password via email link
+- First and last name: add to registration and display in NavBar
 
+--- 
+
+## Known Limitations
+
+- Chat history might reference stale plan data if the user edits the plan mid-conversation
+- Mobile UI is functional but not optimized
+- Currency formatting assumes CAD, no multi-currency support
