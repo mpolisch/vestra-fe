@@ -22,9 +22,7 @@ export default function Error({
     return (
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
             <h2 className="text-2xl font-bold text-text-primary">Something went wrong!</h2>
-            <p className="text-text-secondary mt-2 mb-6">
-                {error.message || 'An unexpected error occurred while processing your request.'}
-            </p>
+            <p className="text-text-secondary mt-2 mb-6">{message}</p>
             <div className="flex gap-4">
                 <button
                     onClick={() => reset()}

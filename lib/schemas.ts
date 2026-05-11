@@ -97,4 +97,3 @@ export const updatePlanSchema = planBaseSchema.partial();
 
 export type CreatePlanDTO = z.infer<typeof createPlanSchema>;
 export type CreatePlanInput = z.input<typeof planBaseSchema>;
-export type UpdatePlanDTO = z.infer<typeof updatePlanSchema>;
