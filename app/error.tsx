@@ -14,6 +14,11 @@ export default function Error({
         console.error('Unhandled App Error:', error);
     }, [error]);
 
+    const message =
+        process.env.NODE_ENV === 'production'
+            ? 'An unexpected error occurred. Please try again.'
+            : error.message;
+
     return (
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
             <h2 className="text-2xl font-bold text-text-primary">Something went wrong!</h2>
