@@ -9,7 +9,7 @@ import type { Plan } from '@/types';
 import type { ApiSuccess } from '@/types/api';
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-    const { user, status } = useAuth();
+    const { status } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
     const [readyForPath, setReadyForPath] = useState<string | null>(null);
@@ -57,8 +57,6 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             </div>
         );
     }
-
-    if (!user) return null;
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
