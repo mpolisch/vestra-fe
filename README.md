@@ -147,3 +147,4 @@ npm run start
 - Chat history might reference stale plan data if the user edits the plan mid-conversation
 - Mobile UI is functional but not optimized
 - Currency formatting assumes CAD, no multi-currency support
+- Rate limiting is IP-based and in-memory: hitting auth rate limit during active use can cause UI to hang on a loading state if within a protected route. Refreshing the page resolves it.
