@@ -116,7 +116,7 @@ npm run start
 
 ## Security
 
-- Authentication handled via httpOnly, Secure, SameSite=none cookies
+- Authentication handled via httpOnly, Secure, SameSite=strict cookies
 - All API requests proxied through vercel so there are no direct cross-origin requests from the browser
 - No sensitive data stored in localStorage or sessionStorage
 - Security headers configured in next.config.ts
